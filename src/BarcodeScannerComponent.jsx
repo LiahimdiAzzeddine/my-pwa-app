@@ -13,8 +13,20 @@ const BarcodeScannerComponent = () => {
 
   const checkPermission = async () => {
     const status = await BarcodeScanner.checkPermission({ force: true });
-    setHasPermission(status.granted);
+    if (!status.granted) {
+      // Demande explicite de permission
+      const requestStatus = await BarcodeScanner.requestPermission();
+      if (requestStatus.granted) {
+        setHasPermission(true);
+      } else {
+        console.error('Permission de caméra refusée.');
+        alert('Veuillez autoriser l’accès à la caméra pour utiliser le scanner de codes-barres.');
+      }
+    } else {
+      setHasPermission(true);
+    }
   };
+  
 
   const startScan = async () => {
     if (!hasPermission) {
@@ -23,8 +35,6 @@ const BarcodeScannerComponent = () => {
     }
 
     setIsScanning(true);
-
-    // Préparer l'interface pour le scan (surtout important pour iOS)
     document.body.style.background = 'transparent';
     document.querySelector('body')?.classList.add('scanner-active');
 
@@ -51,7 +61,6 @@ const BarcodeScannerComponent = () => {
   const stopScan = () => {
     BarcodeScanner.stopScan();
     setIsScanning(false);
-    // Restaurer l'interface
     document.body.style.background = '';
     document.querySelector('body')?.classList.remove('scanner-active');
   };
