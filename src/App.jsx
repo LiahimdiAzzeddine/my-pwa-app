@@ -1,39 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import CameraCapture from './CameraCapture'
-import BarcodeScannerComponent from './BarcodeScannerComponent'
+import { useState } from 'react';
+import Scanner from "./Scanner";
+import "./scanner.css";
+import Result from './Result';
+import 'antd/dist/reset.css';  
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [barcode, setBarcode] = useState(null);
+  const [scannerActive, setScannerActive] = useState(true);
+  const [showDetails, setShowDetails] = useState(false);
+
+  const handleScan = (code) => {
+    setBarcode(code);
+    setScannerActive(false); // Désactiver le scanner après la détection du code-barres
+    setShowDetails(true);    // Montrer les détails après le scan
+  };
+
+  const resetMain = () => {
+    setBarcode(null);         // Réinitialiser le code-barres
+    setScannerActive(true);   // Réactiver le scanner
+    setShowDetails(false);    // Masquer les détails
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <CameraCapture/>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <BarcodeScannerComponent/>
-      <h1>test 2</h1>
+      {showDetails ? (
+        <Result
+          barcode={barcode}
+          resetBarcode={resetMain}
+        />
+      ) : (
+        
+        <Scanner
+          onScan={handleScan}
+          scannerActive={scannerActive}
+          deactivateScanner={() => setScannerActive(false)}
+        />
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
