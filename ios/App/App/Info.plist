@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 <key>NSCameraUsageDescription</key>
-<string>Cette application nécessite l'accès à la caméra pour scanner des codes-barres.</string>
+<string>To be able to scan barcodes</string>
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>

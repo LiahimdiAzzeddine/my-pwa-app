@@ -29,7 +29,6 @@ function App() {
           resetBarcode={resetMain}
         />
       ) : (
-        
         <Scanner
           onScan={handleScan}
           scannerActive={scannerActive}
